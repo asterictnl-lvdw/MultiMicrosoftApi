@@ -24,6 +24,9 @@
     The client ID in GUID format. A list of valid GUIDs can be found here: https://learn.microsoft.com/en-us/troubleshoot/azure/entra/entra-id/governance/verify-first-party-apps-sign-in, or by using the Get-MgServicePrincipal cmdlet.
     #ClientId you need to #use 1b730954-1685-4b74-9bfd-dac224a7b894 for audit/sign in logs or other things that only work through the AzureAD module, use d1ddf0e4-d672-4dae-b554-9d5bdfd93547 for Intune
 
+.PARAMETER Username
+    The username that is needed in order to retrieve the tenant-id.
+
 .PARAMETER Body
     The body of the request, if the method used requires one (POST, PUT). Typically, this is sent in JSON format.
 
@@ -68,6 +71,8 @@ function Invoke-MultiAzApi
 		#The whole URL to call
 		[Parameter()]
 		[String]$Url,
+        [Parameter()]
+        [String]$Username,
 		#The Name of the Resource
 		[Parameter()]
 		[String]$Resource,
@@ -93,7 +98,7 @@ $TZ = [System.TimeZoneInfo]::FindSystemTimeZoneById($strCurrentTimeZone)
 [datetime]$origin = '1970-01-01 00:00:00'
 
 #TenantID
-$tenantId = (Invoke-RestMethod "https://login.windows.net/$($userUPN.Split("@")[1])/.well-known/openid-configuration" -Method GET).userinfo_endpoint.Split("/")[3]
+$tenantId = (Invoke-RestMethod "https://login.windows.net/$($Username.Split("@")[1])/.well-known/openid-configuration" -Method GET).userinfo_endpoint.Split("/")[3]
 
 # If a refresh token is provided, attempt to use it to get a new access token
 if($refreshToken){
@@ -220,6 +225,7 @@ try{
     return $Response
 }
 #Invoke the function above: We use Resource "74658136-14ec-4630-ad9b-26e160ff0fc6" (Azure PowerShell) -ClientId "1950a258-227b-4e31-a9cf-717495945fc2" (Internal Azure API)
+$Username = Read-Host "Input your emailaddress:"
 $MethodsRequired = Invoke-MultiAzApi -Url "https://main.iam.ad.ext.azure.com/api/PasswordReset/PasswordResetPolicies?getPasswordResetEnabledGroup=false" -Resource "74658136-14ec-4630-ad9b-26e160ff0fc6" -ClientId "1950a258-227b-4e31-a9cf-717495945fc2" -Method 'GET' -Username $Username
 
 #Output the response
