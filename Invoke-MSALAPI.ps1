@@ -124,7 +124,7 @@ $AccessToken = $MsalRequest.AccessToken
     return $Response
 }
 #Invoke the function above: We use Resource "74658136-14ec-4630-ad9b-26e160ff0fc6" (Azure PowerShell) -ClientId "1950a258-227b-4e31-a9cf-717495945fc2" (Internal Azure API) to execute the request
-$MethodsRequired = Invoke-MultiMicrosoftAPIv2 -Url "https://main.iam.ad.ext.azure.com/api/PasswordReset/PasswordResetPolicies?getPasswordResetEnabledGroup=false" -Resource "74658136-14ec-4630-ad9b-26e160ff0fc6" -ClientId "1950a258-227b-4e31-a9cf-717495945fc2" -Method 'GET'
+$MethodsRequired = Invoke-MSALAPI -Url "https://main.iam.ad.ext.azure.com/api/PasswordReset/PasswordResetPolicies?getPasswordResetEnabledGroup=false" -Resource "74658136-14ec-4630-ad9b-26e160ff0fc6" -ClientId "1950a258-227b-4e31-a9cf-717495945fc2" -Method 'GET'
 
 #Output the response as test
 $MethodsRequired | Format-List
